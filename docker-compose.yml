@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  devstral-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - model-data:/root/mistral_models
+    environment:
+      - MODEL_ID=mistralai/Devstral-Small-2505
+      - MODEL_DIR=/root/mistral_models/Devstral
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  model-data:
+    driver: local
